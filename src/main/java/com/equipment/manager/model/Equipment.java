@@ -1,10 +1,19 @@
 package com.equipment.manager.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -30,6 +39,35 @@ public class Equipment {
 	@Column(name = "image_url")
 	private String imageUrl;
 
+	@OneToMany(
+			mappedBy = "comment",
+			cascade = CascadeType.ALL,
+			orphanRemoval = true
+	)
+	private Set<Comment> comments = new HashSet<>();
+	
+	@OneToOne(cascade = {
+			CascadeType.DETACH,
+			CascadeType.MERGE,
+			CascadeType.PERSIST,
+			CascadeType.REFRESH
+	})
+	@JoinColumn(
+			name = "category_id", 
+			referencedColumnName = "id"
+	)
+	private Category category;
+	
+	@ManyToMany(cascade = {
+			CascadeType.PERSIST,
+			CascadeType.MERGE
+	})
+	@JoinTable(
+			name = "equipment_parameters",
+			joinColumns = @JoinColumn(name = "equipment_id"),
+			inverseJoinColumns = @JoinColumn(name = "parameter_id")
+	)
+	private Set<Parameter> parameters = new HashSet<>();
 	
 	public Equipment() {
 	
@@ -85,5 +123,41 @@ public class Equipment {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+
+	public Set<Comment> getComments() {
+		return comments;
+	}
 	
+	public void addComment(Comment comment) {
+		comments.add(comment);
+		comment.setEquipment(this);
+	}
+
+	public void removeComment(Comment comment) {
+		comments.remove(comment);
+		comment.setEquipment(null);
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public Set<Parameter> getParameters() {
+		return parameters;
+	}
+
+	public void addParameter(Parameter parameter) {
+		parameters.add(parameter);
+		parameter.getEquipments().add(this);
+	}
+
+	public void removeParameter(Parameter parameter) {
+		parameters.remove(parameter);
+		parameter.getEquipments().remove(this);
+	}
+
 }
