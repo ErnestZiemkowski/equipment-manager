@@ -9,6 +9,6 @@ import com.equipment.manager.model.Role;
 import com.equipment.manager.model.RoleName;
 
 @Repository
-public interface RoleReposiory extends JpaRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
 	Optional<Role> findByName(RoleName roleName);
 }
