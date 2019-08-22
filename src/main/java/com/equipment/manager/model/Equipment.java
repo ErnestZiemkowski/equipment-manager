@@ -40,7 +40,7 @@ public class Equipment {
 	private String imageUrl;
 
 	@OneToMany(
-			mappedBy = "comment",
+			mappedBy = "equipment",
 			cascade = CascadeType.ALL,
 			orphanRemoval = true
 	)
