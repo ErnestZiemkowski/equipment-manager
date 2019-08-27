@@ -52,10 +52,10 @@ public class Comment {
 	
 	}
 	
-	public Comment(String content, Instant createdAt, Instant updatedAt) {
+	public Comment(String content, User user, Equipment equipment) {
 		this.content = content;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+		this.user = user;
+		this.equipment = equipment;
 	}
 
 	public Long getId() {

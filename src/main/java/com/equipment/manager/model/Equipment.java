@@ -55,9 +55,12 @@ public class Equipment {
 	@JoinColumn(name = "category_id")
 	private Category category;
 	
-	@OneToOne
+	@OneToOne(cascade = {
+			CascadeType.PERSIST,
+			CascadeType.MERGE
+	})
 	@JoinColumn(name = "specification_id")
-	private Specification specification;
+	private Specification specification = new Specification();
 	
 	public Equipment() {
 	
@@ -68,8 +71,8 @@ public class Equipment {
 		this.description = description;
 		this.isValid = isValid;
 		this.imageUrl = imageUrl;
-		this.specification = new Specification();
 		this.specification.setEquipment(this);
+		
 	}
 
 	public Long getId() {

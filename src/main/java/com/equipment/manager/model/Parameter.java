@@ -19,7 +19,7 @@ public class Parameter {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToMany(mappedBy = "specifications")
+	@ManyToMany(mappedBy = "parameters")
 	private Set<Specification> specifications;
 
 	@ManyToOne

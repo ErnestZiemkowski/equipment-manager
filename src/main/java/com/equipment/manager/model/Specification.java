@@ -5,6 +5,9 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -15,22 +18,32 @@ import javax.persistence.Table;
 @Table(name = "specifications")
 public class Specification {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
 	@OneToOne(mappedBy = "specification")
 	private Equipment equipment;
 
 	@ManyToMany(cascade = {
-			CascadeType.DETACH,
 			CascadeType.MERGE,
 			CascadeType.PERSIST,
-			CascadeType.REFRESH
 	})
 	@JoinTable(
 			name = "specification_parameters",
-			joinColumns = @JoinColumn(name = "id"),
-			inverseJoinColumns = @JoinColumn(name = "id")
+			joinColumns = @JoinColumn(name = "specification_id"),
+			inverseJoinColumns = @JoinColumn(name = "parameter_id")
 	)
 	private Set<Parameter> parameters = new HashSet<>();
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Equipment getEquipment() {
 		return equipment;
 	}

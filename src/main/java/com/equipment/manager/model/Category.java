@@ -38,6 +38,13 @@ public class Category {
 	public Category() {
 	
 	}
+	
+	
+
+	public Category(@NotBlank @Size(max = 30) String name, Set<Equipment> equipments) {
+		this.name = name;
+		this.equipments = equipments;
+	}
 
 	public Category(String name) {
 		this.name = name;
