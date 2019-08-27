@@ -6,17 +6,22 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "equipments")
@@ -46,28 +51,13 @@ public class Equipment {
 	)
 	private Set<Comment> comments = new HashSet<>();
 	
-	@OneToOne(cascade = {
-			CascadeType.DETACH,
-			CascadeType.MERGE,
-			CascadeType.PERSIST,
-			CascadeType.REFRESH
-	})
-	@JoinColumn(
-			name = "category_id", 
-			referencedColumnName = "id"
-	)
+	@ManyToOne
+	@JoinColumn(name = "category_id")
 	private Category category;
 	
-	@ManyToMany(cascade = {
-			CascadeType.PERSIST,
-			CascadeType.MERGE
-	})
-	@JoinTable(
-			name = "equipment_parameters",
-			joinColumns = @JoinColumn(name = "equipment_id"),
-			inverseJoinColumns = @JoinColumn(name = "parameter_id")
-	)
-	private Set<Parameter> parameters = new HashSet<>();
+	@OneToOne
+	@JoinColumn(name = "specification_id")
+	private Specification specification;
 	
 	public Equipment() {
 	
@@ -78,6 +68,8 @@ public class Equipment {
 		this.description = description;
 		this.isValid = isValid;
 		this.imageUrl = imageUrl;
+		this.specification = new Specification();
+		this.specification.setEquipment(this);
 	}
 
 	public Long getId() {
@@ -146,18 +138,12 @@ public class Equipment {
 		this.category = category;
 	}
 
-	public Set<Parameter> getParameters() {
-		return parameters;
+	public Specification getSpecification() {
+		return specification;
 	}
 
-	public void addParameter(Parameter parameter) {
-		parameters.add(parameter);
-		parameter.getEquipments().add(this);
+	public void setSpecification(Specification specification) {
+		this.specification = specification;
 	}
-
-	public void removeParameter(Parameter parameter) {
-		parameters.remove(parameter);
-		parameter.getEquipments().remove(this);
-	}
-
+	
 }
