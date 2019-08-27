@@ -1,6 +1,5 @@
 package com.equipment.manager.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -8,50 +7,32 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "parameters", uniqueConstraints = {
-		@UniqueConstraint(columnNames = {
-				"name"
-		})
-})
+@Table(name = "parameters")
 public class Parameter {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank
-	@Size(max = 30)	
-	private String name;
+	@ManyToMany(mappedBy = "specifications")
+	private Set<Specification> specifications;
 
-	@NotBlank
-	@Size(max = 150)
-	private String value;
+	@ManyToOne
+	@JoinColumn(name = "title_id")
+	private ParameterTitle parameterTitle;
 	
-	@ManyToMany
-	@JoinTable(
-			name = "equipment_parameters",
-			joinColumns = @JoinColumn(name = "parameter_id"),
-			inverseJoinColumns = @JoinColumn(name = "equipment_id")
-	)
-	private Set<Equipment> equipments = new HashSet<>();
+	private String description;
 	
-	public Parameter() {
-	
+	public Parameter(ParameterTitle parameterTitle, String description) {
+		this.parameterTitle = parameterTitle;
+		this.description = description;
 	}
-
-	public Parameter(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -60,34 +41,24 @@ public class Parameter {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Set<Specification> getSpecifications() {
+		return specifications;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public ParameterTitle getParameterTitle() {
+		return parameterTitle;
 	}
 
-	public String getValue() {
-		return value;
+	public void setParameterTitle(ParameterTitle parameterTitle) {
+		this.parameterTitle = parameterTitle;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public String getDescription() {
+		return description;
 	}
 
-	public Set<Equipment> getEquipments() {
-		return equipments;
-	}
-	
-	public void addEquipment(Equipment equipment) {
-		equipments.add(equipment);
-		equipment.getParameters().add(this);
-	}
-	
-	public void removeEquipment(Equipment equipment) {
-		equipments.remove(equipment);
-		equipment.getParameters().remove(this);
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }
