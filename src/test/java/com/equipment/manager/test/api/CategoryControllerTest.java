@@ -45,9 +45,9 @@ public class CategoryControllerTest {
 		
 		mockMvc
 			.perform(MockMvcRequestBuilders
-					.get("/api/categories")
-					.accept(MediaType.APPLICATION_JSON))
-					.andExpect(status().isUnauthorized());
+			.get("/api/categories")
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isUnauthorized());
 	}
 	
 }

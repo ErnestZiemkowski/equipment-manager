@@ -5,6 +5,14 @@ public class CommentRequest {
 	private Long id;
 	private String content;
 	
+	public CommentRequest() {
+
+	}
+	
+	public CommentRequest(String content) {
+		this.content = content;
+	}
+
 	public Long getId() {
 		return id;
 	}
