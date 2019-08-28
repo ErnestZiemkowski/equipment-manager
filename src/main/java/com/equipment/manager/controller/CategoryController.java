@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.equipment.manager.model.Category;
 import com.equipment.manager.payload.CategoryResponse;
 import com.equipment.manager.service.CategorySercvice;
 
