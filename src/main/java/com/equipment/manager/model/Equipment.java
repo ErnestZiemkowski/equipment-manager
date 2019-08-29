@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
@@ -55,12 +56,14 @@ public class Equipment {
 	@JoinColumn(name = "category_id")
 	private Category category;
 	
-	@OneToOne(cascade = {
-			CascadeType.PERSIST,
-			CascadeType.MERGE
+	@OneToOne(
+			fetch = FetchType.EAGER,
+			cascade = {
+				CascadeType.PERSIST,
+				CascadeType.MERGE
 	})
 	@JoinColumn(name = "specification_id")
-	private Specification specification = new Specification();
+	private Specification specification;
 	
 	public Equipment() {
 	
@@ -71,8 +74,6 @@ public class Equipment {
 		this.description = description;
 		this.isValid = isValid;
 		this.imageUrl = imageUrl;
-		this.specification.setEquipment(this);
-		
 	}
 
 	public Long getId() {

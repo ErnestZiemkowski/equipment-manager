@@ -80,29 +80,25 @@ public class EquipmentService {
 		return equipmentRepository.save(equipment);
 	}
 	
-//	public Integer updateEquipment(EquipmentRequest equipmentRequest, Long equipmentId) {
-//		if (!equipmentRepository.findById(equipmentId).isPresent()) {
-//			logger.error("Equipment with Id " + equipmentId + "do not exist");
-//			throw new ResourceNotFoundException("Equipment", "id", equipmentId);
-//		}
-//		
-//		return equipmentRepository.update(
-//				equipmentId, 
-//				equipmentRequest.getName(),
-//				equipmentRequest.getDescription(), 
-//				equipmentRequest.getIsValid(), 
-//				equipmentRequest.getImageUrl(), 
-//				equipmentRequest.getCategoryId());
-//		);
-//				
-//		return equipmentRepository.updateEquipment(
-//				equipmentId, 
-//				equipmentRequest.getName(),
-//				equipmentRequest.getDescription(), 
-//				equipmentRequest.getIsValid(), 
-//				equipmentRequest.getImageUrl(), 
-//				equipmentRequest.getCategoryId());
-//	}
+	public Equipment updateEquipment(EquipmentRequest equipmentRequest, Long equipmentId) {
+		Equipment equipment = equipmentRepository
+				.findById(equipmentId)
+				.orElseThrow(() -> new ResourceNotFoundException("Equipment", "id", equipmentId));
+		
+		if (equipmentRequest.getCategoryId() != null) {
+			Category category = categoryRepository
+					.findById(equipmentRequest.getCategoryId())
+					.orElseThrow(() -> new ResourceNotFoundException("Category", "id", equipmentRequest.getCategoryId()));
+			
+			equipment.setCategory(category);
+		} 
+		if (equipmentRequest.getDescription() != null) equipment.setDescription(equipmentRequest.getDescription());
+		if (equipmentRequest.getImageUrl() != null) equipment.setImageUrl(equipmentRequest.getImageUrl());
+		if (equipmentRequest.getIsValid() != null) equipment.setIsValid(equipmentRequest.getIsValid());
+		if (equipmentRequest.getName() != null) equipment.setName(equipmentRequest.getName());
+			
+		return equipmentRepository.save(equipment);
+	}
 
 	
 	public ApiResponse deleteEquipment(Long equipmentId) {

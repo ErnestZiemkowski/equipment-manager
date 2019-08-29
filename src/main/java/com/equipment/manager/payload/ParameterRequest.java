@@ -5,6 +5,10 @@ public class ParameterRequest {
 	private Long parameterTitleId;
 	private String description;
 	
+	public ParameterRequest() {
+
+	}
+	
 	public ParameterRequest(Long parameterTitleId, String description) {
 		this.parameterTitleId = parameterTitleId;
 		this.description = description;

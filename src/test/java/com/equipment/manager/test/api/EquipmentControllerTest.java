@@ -14,9 +14,16 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.equipment.manager.payload.CommentRequest;
+import com.equipment.manager.payload.EquipmentRequest;
+import com.equipment.manager.payload.ParameterRequest;
 import com.google.gson.Gson;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,8 +33,8 @@ public class EquipmentControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	
-	@WithMockUser("adam")
 	@Test
+	@WithMockUser("adam")
 	public void getAllEquipmentsTest() throws Exception {
 		
 		mockMvc
@@ -35,16 +42,16 @@ public class EquipmentControllerTest {
 			.get("/api/equipments")
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[0].name").value("Thin Ultra"))
-			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[1].name").value("Smartphone"))
-			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[2].name").value("PC"))
-			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[3].name").value("JBL"))
-			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[4].name").value("Lenovo Thinkpad"));
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[0].name").exists())
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[1].name").exists())
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[2].name").exists())
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[3].name").exists())
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[4].name").exists());
 	
 	}
 
-	@WithMockUser("adam")
 	@Test 
+	@WithMockUser("adam")
 	public void getEquipmentByIdTest() throws Exception {
 	
 		mockMvc
@@ -56,8 +63,8 @@ public class EquipmentControllerTest {
 	
 	}
 	
-	@WithMockUser("adam")
 	@Test 
+	@WithMockUser("adam")
 	public void getEquipmentByInvalidIdTest() throws Exception {
 	
 		mockMvc
@@ -68,8 +75,87 @@ public class EquipmentControllerTest {
 
 	}
 	
+	@Test
 	@WithMockUser("adam")
+	public void createEquipmentWithParametersToAttach() throws Exception {
+		
+		Gson gson = new Gson();
+		
+		ParameterRequest parameterRequestRamMemory = new ParameterRequest((long) 2, "4GB RAM");
+		ParameterRequest parameterRequestResolution = new ParameterRequest((long) 6, "1920x1080");
+		ParameterRequest parameterRequestBattery = new ParameterRequest((long) 10, "4000 mAh");
+		
+		Set<ParameterRequest> parameters = new HashSet<>();
+
+		parameters.add(parameterRequestBattery);
+		parameters.add(parameterRequestResolution);
+		parameters.add(parameterRequestRamMemory);
+		
+		EquipmentRequest equipmentRequest = new EquipmentRequest(
+			"Nokia",
+			"The best phone",
+			true,
+			"nokia.jpg",
+			(long) 2,
+			parameters
+		);
+		
+		String jsonEquipment = gson.toJson(equipmentRequest);
+		
+		mockMvc
+			.perform(MockMvcRequestBuilders
+			.post("/api/equipments/new")
+			.content(jsonEquipment)
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.success").value(true))
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.message").value("New Equipment added successfully"));
+		
+	}
+	
+	@Test
+	@WithMockUser("adam")
+	public void updateEquipmentWithParametersToAttach() throws Exception {
+
+		Gson gson = new Gson();
+		
+		ParameterRequest parameterRequestBuildMemory = new ParameterRequest((long) 3, "512 GB");
+		ParameterRequest parameterRequestScreenDiagonal = new ParameterRequest((long) 5, "60 cals");
+		ParameterRequest parameterRequestBattery = new ParameterRequest((long) 10, "5500 mAh");
+		
+		Set<ParameterRequest> parameters = new HashSet<>();
+		
+		parameters.add(parameterRequestBattery);
+		parameters.add(parameterRequestScreenDiagonal);
+		parameters.add(parameterRequestBuildMemory);
+		
+		EquipmentRequest equipmentRequest = new EquipmentRequest(
+				"Dell",
+				"The best Laptop",
+				null,
+				null,
+				(long) 1,
+				parameters
+		);
+
+		String jsonEquipment = gson.toJson(equipmentRequest);
+
+		mockMvc
+			.perform(MockMvcRequestBuilders
+			.put("/api/equipments/{equipmentId}", 5)
+			.content(jsonEquipment)
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.success").value(true))
+			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.message").value("Equipment updated successfully"));
+
+	}
+	
+	
 	@Test 
+	@WithMockUser("adam")
 	public void deleteEquipmentByIdTest() throws Exception {
 
 		mockMvc
@@ -82,8 +168,8 @@ public class EquipmentControllerTest {
 		
 	}
 
-	@WithMockUser("adam")
 	@Test
+	@WithMockUser("adam")
 	public void deleteEquipmentByInvalidIdTest() throws Exception {
 		
 		mockMvc
@@ -94,8 +180,8 @@ public class EquipmentControllerTest {
 		
 	}
 	
-	@WithMockUser("adam")
 	@Test
+	@WithMockUser("adam")
 	public void createCommentAssignedToEquipmentTest() throws Exception {
 		
 		Gson gson = new Gson();
@@ -114,8 +200,8 @@ public class EquipmentControllerTest {
 							
 	}
 
-	@WithMockUser("adam")
 	@Test
+	@WithMockUser("adam")
 	public void getCommentsAssignedToEquipmentTest() throws Exception {
 				
 		mockMvc
@@ -127,6 +213,5 @@ public class EquipmentControllerTest {
 			.andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$[1].content").exists());
 							
 	}
-
 	
 }

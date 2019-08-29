@@ -1,10 +1,9 @@
 package com.equipment.manager.payload;
 
+import java.util.List;
 import java.util.Set;
 
 public class EquipmentRequest {
-
-	private Long equipmentId;
 
 	private String name;
 	
@@ -18,12 +17,18 @@ public class EquipmentRequest {
 	
 	private Set<ParameterRequest> parameters;
 	
-	public Long getEquipmentId() {
-		return equipmentId;
-	}
+	public EquipmentRequest() {
 
-	public void setEquipmentId(Long equipmentId) {
-		this.equipmentId = equipmentId;
+	}
+	
+	public EquipmentRequest(String name, String description, Boolean isValid, String imageUrl,
+			Long categoryId, Set<ParameterRequest> parameters) {
+		this.name = name;
+		this.description = description;
+		this.isValid = isValid;
+		this.imageUrl = imageUrl;
+		this.categoryId = categoryId;
+		this.parameters = parameters;
 	}
 
 	public String getName() {

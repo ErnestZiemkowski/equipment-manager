@@ -41,6 +41,10 @@ public class ParameterTitle {
 	})
 	private Set<Parameter> parameters = new HashSet<>();
 	
+	public ParameterTitle() {
+
+	}
+	
 	public ParameterTitle(String title) {
 		this.title = title;
 	}

@@ -51,21 +51,24 @@ public class EquipmentController {
 
 	@PostMapping("/new")
 	public ApiResponse createEquipment(@Valid @RequestBody EquipmentRequest equipmentRequest) {
-		equipmentService.createEquipment(equipmentRequest);
+		Equipment equipment = equipmentService.createEquipment(equipmentRequest);
+		specificationService.createSpecification(equipment.getId());
 		specificationService.updateSpecification(
 				equipmentRequest.getParameters(),
-				equipmentRequest.getEquipmentId());
-		
+				equipment.getId());
+
 		return new ApiResponse(true, "New Equipment added successfully");
 	}
 	
-//	@PutMapping("/{equipmentId}")
-//	public ApiResponse updateEquipment(@Valid @RequestBody EquipmentRequest equipmentRequest, @PathVariable Long equipmentId) {
-//		int rowsAffected = equipmentService.updateEquipment(equipmentRequest, equipmentId);
-//		
-//		 
-//		return new ApiResponse(true, "Equipment successfully updated");
-//	}
+	@PutMapping("/{equipmentId}") 
+	public ApiResponse updateEquipment(@Valid @RequestBody EquipmentRequest equipmentRequest, @PathVariable Long equipmentId) {
+		equipmentService.updateEquipment(equipmentRequest, equipmentId);		
+		specificationService.updateSpecification(
+				equipmentRequest.getParameters(),
+				equipmentId);
+		
+		return new ApiResponse(true, "Equipment updated successfully");
+	}
 	
 	@DeleteMapping("/{equipmentId}")
 	public ApiResponse deleteEquipmentById(@PathVariable Long equipmentId) {

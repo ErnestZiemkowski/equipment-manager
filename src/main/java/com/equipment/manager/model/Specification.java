@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +23,12 @@ public class Specification {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToOne(mappedBy = "specification")
+	@OneToOne(
+			mappedBy = "specification",
+			cascade = {
+					CascadeType.PERSIST,
+					CascadeType.MERGE
+			})
 	private Equipment equipment;
 
 	@ManyToMany(cascade = {

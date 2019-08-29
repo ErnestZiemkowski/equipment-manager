@@ -15,12 +15,16 @@ import org.springframework.stereotype.Component;
 import com.equipment.manager.model.Category;
 import com.equipment.manager.model.Comment;
 import com.equipment.manager.model.Equipment;
+import com.equipment.manager.model.Parameter;
+import com.equipment.manager.model.ParameterTitle;
 import com.equipment.manager.model.Role;
 import com.equipment.manager.model.RoleName;
+import com.equipment.manager.model.Specification;
 import com.equipment.manager.model.User;
 import com.equipment.manager.repository.CategoryRepository;
 import com.equipment.manager.repository.CommentRepository;
 import com.equipment.manager.repository.EquipmentRepository;
+import com.equipment.manager.repository.ParameterTitleRepository;
 import com.equipment.manager.repository.RoleRepository;
 import com.equipment.manager.repository.UserRepository;
 import com.github.javafaker.Faker;
@@ -45,6 +49,9 @@ public class SeedMain {
 	@Autowired
 	private CommentRepository commentRepository;
 	
+	@Autowired
+	private ParameterTitleRepository parameterTitleRepository;
+	
 	private Faker faker = new Faker(new Locale("en-GB")); 
 		
 	private Role roleAdmin = new Role();
@@ -66,6 +73,17 @@ public class SeedMain {
 	private Equipment pc = new Equipment("PC", faker.lorem().characters(150, 249, true), true, "pc.jpg");
 	private Equipment audio = new Equipment("JBL", faker.lorem().characters(150, 249, true), true, "jbl.jpg");
 	private Equipment laptop = new Equipment("Lenovo Thinkpad", faker.lorem().characters(150, 249, true), true, "jbl.jpg");
+		
+	private ParameterTitle parameterTitleProcessor = new ParameterTitle("Processor");
+	private ParameterTitle parameterTitleRamMemory = new ParameterTitle("RAM Memory");
+	private ParameterTitle parameterTitleBuildMemory = new ParameterTitle("Build Memory");
+	private ParameterTitle parameterTitleScreenType = new ParameterTitle("Screen Type");
+	private ParameterTitle parameterTitleScreenDiagonal = new ParameterTitle("Screen Diagonal");
+	private ParameterTitle parameterTitleResolution = new ParameterTitle("Resolution");
+	private ParameterTitle parameterTitleConnectivity = new ParameterTitle("Connectivity");
+	private ParameterTitle parameterTitleSateliteNavigation = new ParameterTitle("Satelite Navigation");
+	private ParameterTitle parameterTitleConnectors = new ParameterTitle("Connectors");
+	private ParameterTitle parameterTitleBattery = new ParameterTitle("Battery");	
 	
 	@EventListener
 	public void seed(ContextRefreshedEvent event) {
@@ -74,6 +92,7 @@ public class SeedMain {
 		seedCategoriesTable();
 		seedEquipmentsTable();
 		seedCommentsTable();
+		seedParameterTitlesTable();
 	}
 	
 	private void seedRolesTable() {
@@ -133,11 +152,31 @@ public class SeedMain {
 		
 		if (equipments.size() <= 0 || equipments == null) {
 						
+			Specification smartTvSpecification = new Specification();
+			Specification smartphoneSpecification = new Specification();
+			Specification pcSpecification = new Specification();
+			Specification audioSpecification = new Specification();
+			Specification latopSpecification = new Specification();
+			
 			smartTV.setCategory(tvCategory);
+			smartTV.setSpecification(smartTvSpecification);
+			smartTvSpecification.setEquipment(smartTV);
+			
 			smartphone.setCategory(smartphoneCategory);
+			smartphone.setSpecification(smartphoneSpecification);
+			smartphoneSpecification.setEquipment(smartphone);
+			
 			pc.setCategory(pcCategory);
+			pc.setSpecification(pcSpecification);
+			pcSpecification.setEquipment(pc);
+			
 			audio.setCategory(audioCategory);
+			audio.setSpecification(audioSpecification);
+			audioSpecification.setEquipment(audio);
+			
 			laptop.setCategory(laptopCategory);
+			laptop.setSpecification(latopSpecification);
+			latopSpecification.setEquipment(laptop);
 			
 			equipmentRepository.saveAll(Arrays.asList(smartTV, smartphone, pc, audio, laptop));
 		} else {
@@ -179,8 +218,31 @@ public class SeedMain {
 			));
 		} else {
             logger.info("Users Seeding Not Required");
-        }
+        }	
 	}
 	
+	private void seedParameterTitlesTable() {
+		List<ParameterTitle> parameterTitles = parameterTitleRepository.findAll();
+		
+		if (parameterTitles.size() <= 0 || parameterTitles == null) {
+			
+			parameterTitleRepository.saveAll(Arrays.asList(
+					parameterTitleProcessor,
+					parameterTitleRamMemory,
+					parameterTitleBuildMemory,
+					parameterTitleScreenType,
+					parameterTitleScreenDiagonal,
+					parameterTitleResolution,
+					parameterTitleConnectivity,
+					parameterTitleSateliteNavigation,
+					parameterTitleConnectors,
+					parameterTitleBattery
+			));
+			
+		} else {
+            logger.info("Parameters Seeding Not Required");
+        }
+	}
+
 }
 
