@@ -7,9 +7,6 @@ public class EquipmentResponse {
 	private String description;
 	private Boolean isValid;
 	private String imageUrl;
-
-//	private Set<CommentResponse> comments;
-//	private CategoryResponse category;
 		
 	public EquipmentResponse(Long id, String name, String description, Boolean isValid, String imageUrl) {
 		this.id = id;
