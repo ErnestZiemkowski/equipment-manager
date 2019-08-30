@@ -35,3 +35,14 @@ Equipment Manager module for service facility API
 	* GET /api/user/checkUsernameAvailability
 	* GET /api/user/checkEmailAvailability
 	
+### Security
+	
+	For testing purposes you can login by pre-defined credentials
+	
+	* Admin: admin, Pass: admin
+	* User: adam, Pass: adam
+	* User: eve, Pass: eve
+	
+### Final notes
+
+	This application is for personal usage and it is not prepared yet for working in production environment
